@@ -2,7 +2,7 @@
 BUAA Software Engineering
 
 
-## Record 
+## Push Record 
 - 2020
 
 - 0313: init
@@ -13,4 +13,6 @@ BUAA Software Engineering
     - 时间分析
     - 更换数据结构以优化性能 
 
-    
+- 0315: add design
+  - 确定Point, Line, Circle, Calculator主要的class及其接口
+  - 确定实现的主要算法    

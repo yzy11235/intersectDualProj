@@ -1,5 +1,7 @@
 ﻿#include "def.h"
-#include "Graph.h"
+#include "Point.h"
+#include "Line.h"
+#include "Circle.h"
 #include "Calculator.h"
 #include <vector>
 #include <set>
@@ -70,11 +72,12 @@ int main(int argc, char *argv[]) {
     for (i = 0; i < n; i++) {
         infile >> type;
         if (type == 'L') {
+			lineType lineT = L;
             infile >> x1 >> y1 >> x2 >> y2;
-            Line line(x1, y1, x2, y2);
+			Line line(lineT, x1, y1, x2, y2);
             lVec.push_back(line);
         }
-        else {
+        else if (type == 'C') {
             infile >> x1 >> y1 >> r;
             Circle circle(x1, y1, r);
             cVec.push_back(circle);
