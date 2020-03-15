@@ -1,24 +1,19 @@
 #ifndef LINE_H_
 #define LINE_H_
 
+#include "stdafx.h"
 #include "Point.h"
 
 // 'L' -> line;
 // 'R' -> radio;
 // 'S' -> segment;
-enum lineType
-{
-	L,
-	R,
-	S
-};
 
 class Line
 {
 public:
 	Line();
-	Line(lineType newType, double x1, double y1, double x2, double y2);
-	lineType getType();
+	Line(char newType, double x1, double y1, double x2, double y2);
+	char getType();
 	double getA();
 	double getB();
 	double getC();
@@ -26,7 +21,7 @@ public:
 	Point  getP2();
 
 private:
-	lineType type;
+	char type;
 	Point p1;
 	Point p2;
 	double A;

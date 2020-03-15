@@ -72,9 +72,8 @@ int main(int argc, char *argv[]) {
     for (i = 0; i < n; i++) {
         infile >> type;
         if (type == 'L') {
-			lineType lineT = L;
             infile >> x1 >> y1 >> x2 >> y2;
-			Line line(lineT, x1, y1, x2, y2);
+			Line line(type, x1, y1, x2, y2);
             lVec.push_back(line);
         }
         else if (type == 'C') {
