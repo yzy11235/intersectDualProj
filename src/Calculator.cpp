@@ -5,23 +5,7 @@ using namespace std;
 
 
 Calculator::Calculator() {}
-//�˴�������
-int Calculator::haveIntersection(Line l1, Line l2, set<Point>& nodeSet) {
-    double A1 = l1.getA();
-    double B1 = l1.getB();
-    double C1 = l1.getC();
-    double A2 = l2.getA();
-    double B2 = l2.getB();
-    double C2 = l2.getC();
-    double den = A1 * B2 - A2 * B1;
-    if (den==0)
-        return 0;
-    double num1 = B1 * C2 - B2 * C1;
-    double num2 = A2 * C1 - A1 * C2;
-    Point  node(num1 / den, num2 / den);
-    nodeSet.insert(node);
-    return 1;
-}
+
 
 // TODO: shift to Calculator 
 inline double xmult(Point v1, Point v2) {
@@ -32,24 +16,33 @@ double xmult(Point o, Point a, Point b) {
 	return (a.getX() - o.getX()) * (b.getY() - o.getY()) - (b.getX() - o.getX()) * (a.getY() - o.getY());
 }
 
-
+bool Calculator::isParallerl(Line l1, Line l2) {
+    Point p11 = l1.getP1();
+    Point p12 = l1.getP2();
+    Point p21 = l1.getP1();
+    Point p22 = l1.getP2();
+    if (doubleCmp(xmult(p12 - p11, p22 - p21), 0) == 0) {//平行 (重叠还没写）
+        return true;
+    }
+    return false;
+}
 
 bool Calculator::pOnLine(Point p, Line l) {
 	Point p1 = l.getP1();
 	Point p2 = l.getP2();
 	Point v1 = p1 - p;
 	Point v2 = p2 - p;
-	lineType type = l.getType();
+	char type = l.getType();
 	if (doubleCmp(xmult(v1, v2), 0) == 0) {
-		if (type == L) {//直线
+		if (type == 'L') {//直线
 			return true;
 		}
-		else if (type == S) {
+		else if (type == 'S') {
 			if (doubleCmp(v1.getX() * v2.getX(), 0) <= 0) {
 				return true;
 			}
 		}
-		else if (type == R) {
+		else if (type == 'R') {
 			Point r = p1 - p2;
 			if (doubleCmp(r.getX() * v1.getX(), 0) >= 0) {
 				return true;
@@ -59,12 +52,48 @@ bool Calculator::pOnLine(Point p, Line l) {
 	return false;
 }
 
+bool Calculator::pInCircle(Point p, Circle c) {
+    double x = p.getX();
+    double y = p.getY();
+    double x0 = c.getX();
+    double y0 = c.getY();
+    double r = c.getR();
+    double t = (x - x0) * (x - x0) + (y - y0) * (y - y0) - r * r;
+    return (doubleCmp(t, 0) < 0);
+}
+
+//�˴�������
+int Calculator::haveIntersection(Line l1, Line l2, set<Point>& nodeSet) {
+    double A1 = l1.getA();
+    double B1 = l1.getB();
+    double C1 = l1.getC();
+    double A2 = l2.getA();
+    double B2 = l2.getB();
+    double C2 = l2.getC();
+    double den = A1 * B2 - A2 * B1;
+    if (isParallerl(l1, l2) == true)
+        return 0;
+    double num1 = B1 * C2 - B2 * C1;
+    double num2 = A2 * C1 - A1 * C2;
+    Point  node(num1 / den, num2 / den);
+    if (pOnLine(node, l1) && pOnLine(node, l2)) {
+        nodeSet.insert(node);
+        return 1;
+    }
+    return 0;
+}
 
 // 先算交点，再判断交点是否在线上；
 int Calculator::haveIntersection(Circle c, Line l, set<Point>& nodeSet) {
     double A = l.getA();
     double B = l.getB();
     double C = l.getC();
+    Point p1 = l.getP1();
+    Point p2 = l.getP2();
+    char type = l.getType();
+    if (type=='S'&&pInCircle(p1, c) && pInCircle(p2, c)) {//线段的两端点都在圆内
+        return 0;
+    }
     double X = c.getX();
     double Y = c.getY();
     double R = c.getR();
@@ -76,18 +105,30 @@ int Calculator::haveIntersection(Circle c, Line l, set<Point>& nodeSet) {
     else {
         double x0 = (B * B * X - A * B * Y - A * C) / (den);
         double y0 = (A * A * Y - A * B * X - B * C) / (den);
-        if (doubleCmp(d, R)==0) { //ֱ����Բ����
+        if (doubleCmp(d, R)==0) { //相切
             Point node(x0, y0);
-            nodeSet.insert(node);
-            return 1;
+            if (pOnLine(node, l)) {
+                nodeSet.insert(node);
+                return 1;
+            }
+            else {
+                return 0;
+            }            
         }
         else {//ֱ����Բ�ཻ
+            int count = 0;
             double a = sqrt(R * R - d * d);
             if (B == 0) {
                 Point node1(x0, y0 + a);
                 Point node2(x0, y0 - a);
-                nodeSet.insert(node1);
-                nodeSet.insert(node2);
+                if (pOnLine(node1, l)) {
+                    nodeSet.insert(node1);
+                    count++;
+                }
+                if (pOnLine(node2, l)) {
+                    nodeSet.insert(node2);
+                    count++;
+                }
             }
             else {
                 double k = -A / B;
@@ -95,10 +136,16 @@ int Calculator::haveIntersection(Circle c, Line l, set<Point>& nodeSet) {
                 double sin = k*abs(B) / sqrt(den);
                 Point node1(x0 + a * cos, y0 + a * sin);
                 Point node2(x0 - a * cos, y0 - a * sin);
-                nodeSet.insert(node1);
-                nodeSet.insert(node2);
+                if (pOnLine(node1, l)) {
+                    nodeSet.insert(node1);
+                    count++;
+                }
+                if (pOnLine(node2, l)) {
+                    nodeSet.insert(node2);
+                    count++;
+                }
             }
-            return 2;
+            return count;
         }
     }
 }

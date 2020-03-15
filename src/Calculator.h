@@ -16,12 +16,15 @@ public:
 	Calculator();
 	double crossMul();
 	bool pOnLine(Point p, Line l);//判断点是否在line上
-
+	bool isParallerl(Line l1, Line l2);//判断两线是否平行 (并捕捉 重叠的异常)
+	bool pInCircle(Point p, Circle c);
 	int haveIntersection(Line l1, Line l2, set<Point>& nodeSet);
 	int haveIntersection(Circle c, Line l, set<Point>& nodeSet);
 	int haveIntersection(Circle c1, Circle c2, set<Point>& nodeSet);
 	//计算全部交点
 	int countAllinsect(vector<Line> lVec, vector<Circle> cVec, set<Point> &nodeSet);
+	
+
 
 };
 
