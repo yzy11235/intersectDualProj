@@ -1,7 +1,17 @@
 # intersectDualProj
 BUAA Software Engineering
 
-
+## Test
+- Point (finished)
+  - all function tests
+- Line (finished)
+  - all function tests
+- Circle (finished)
+  - all function tests
+- Calculator (partly finished)
+  - finished: `xmult` `pOnline` `pInCircle` `isParallel`
+  - unfinished: haveIntersection，原有个人项目的直线相关测试全部保留，需要完善射线与线段的测试；circle之间的交点无需变更，采用回归测试即可。
+ 
 ## Push Record 
 - 2020
 

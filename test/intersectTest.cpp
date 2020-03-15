@@ -97,15 +97,14 @@ public:
 	};
 
 	TEST_CLASS(CircleTest) {
-public:
-	TEST_METHOD(circleTestBasic) {
-		Circle c1(1, -2, 5);
-		// test xyr
-		Assert::IsTrue(c1.getR() == 5);
-		Assert::IsTrue(c1.getX() == 1);
-		Assert::IsTrue(c1.getY() == -2);
-
-	}
+    public:
+	    TEST_METHOD(circleTestBasic) {
+		   Circle c1(1, -2, 5);
+		   // test xyr
+		   Assert::IsTrue(c1.getR() == 5);
+		   Assert::IsTrue(c1.getX() == 1);
+		   Assert::IsTrue(c1.getY() == -2);
+	    }
 	};
 
 	TEST_CLASS(CalBasicTest) {
@@ -324,11 +323,13 @@ public:
 	TEST_CLASS(CalLAndCTest)
 	{
 	public:
+		// regression test
 		TEST_METHOD(LCtagency)
 		{
 			Calculator* calc = new Calculator();
-			Line line1(1, 0, 1, 4);
-			Line line2(0, 1, 2, 1);
+			char line = 'L';
+			Line line1(line, 1, 0, 1, 4);
+			Line line2(line, 0, 1, 2, 1);
 			Circle c(0, 0, 1);
 			vector<Line> lvec;
 			vector<Circle> cvec;
@@ -353,8 +354,9 @@ public:
 		TEST_METHOD(LCseparat)
 		{
 			Calculator* calc = new Calculator();
-			Line line1(0, 9, 10, 0);
-			Line line2(0, -11, 20, -3);
+			char line = 'L';
+			Line line1(line, 0, 9, 10, 0);
+			Line line2(line, 0, -11, 20, -3);
 			Circle c(0, 0, 1);
 			vector<Line> lvec;
 			vector<Circle> cvec;
@@ -375,9 +377,10 @@ public:
 		TEST_METHOD(LCintersect)
 		{
 			Calculator* calc = new Calculator();
-			Line line1(2, 0, 0, 2);
-			Line line2(-1, 0, -1, 100);
-			Line line3(100, -1, 1000, -1);
+			char line = 'L';
+			Line line1(line, 2, 0, 0, 2);
+			Line line2(line, -1, 0, -1, 100);
+			Line line3(line, 100, -1, 1000, -1);
 			Circle c(0, 0, 2);
 			vector<Line> lvec;
 			vector<Circle> cvec;
@@ -413,6 +416,7 @@ public:
 	TEST_CLASS(CalCAndCTest)
 	{
 	public:
+		// test finished (regression )
 		TEST_METHOD(CCone)
 		{//���� ����
 			Calculator* calc = new Calculator();
@@ -494,7 +498,8 @@ public:
 		TEST_METHOD(TestLineAndLine)
 		{
 			Calculator* calc = new Calculator();
-			Line l(-1, 4, 4, -1);
+			char line = 'L';
+			Line l(line, -1, 4, 4, -1);
 			Circle c1(1, 0, 2);
 			Circle c2(3, -2, 6);
 			Circle c3(2, 2, 1);
@@ -545,7 +550,7 @@ public:
 				infile >> type;
 				if (type == 'L') {
 					infile >> x1 >> y1 >> x2 >> y2;
-					Line line(x1, y1, x2, y2);
+					Line line('L', x1, y1, x2, y2);
 					lVec.push_back(line);
 				}
 				else {
