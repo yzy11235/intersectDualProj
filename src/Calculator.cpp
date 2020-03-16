@@ -1,26 +1,26 @@
 #include "Calculator.h"
-#include <iostream>
+#include <iterator>
 
 using namespace std;
 
 
 Calculator::Calculator() {}
 
-
-// TODO: shift to Calculator 
-inline double xmult(Point v1, Point v2) {
-	return v1.getX() * v2.getY() - v1.getY() * v2.getX();
+inline double Calculator::xmult(Point v1, Point v2) {
+	return (v1.getX() * v2.getY() - v1.getY() * v2.getX());
 }
 
-double xmult(Point o, Point a, Point b) {
-	return (a.getX() - o.getX()) * (b.getY() - o.getY()) - (b.getX() - o.getX()) * (a.getY() - o.getY());
+double Calculator::xmult(Point o, Point a, Point b) {
+	return (a.getX() - o.getX()) 
+		* (b.getY() - o.getY()) - (b.getX() - o.getX()) 
+		* (a.getY() - o.getY());
 }
 
 bool Calculator::isParallerl(Line l1, Line l2) {
     Point p11 = l1.getP1();
     Point p12 = l1.getP2();
-    Point p21 = l1.getP1();
-    Point p22 = l1.getP2();
+    Point p21 = l2.getP1();
+    Point p22 = l2.getP2();
     if (doubleCmp(xmult(p12 - p11, p22 - p21), 0) == 0) {//平行 (重叠还没写）
         return true;
     }
@@ -34,8 +34,8 @@ bool Calculator::pOnLine(Point p, Line l) {
 	Point v2 = p2 - p;
 	char type = l.getType();
 	if (doubleCmp(xmult(v1, v2), 0) == 0) {
-		if (type == 'L') {//直线
-			return true;
+		if (type == 'L') {//直线           
+			return true;            
 		}
 		else if (type == 'S') {
 			if (doubleCmp(v1.getX() * v2.getX(), 0) <= 0) {
@@ -62,7 +62,6 @@ bool Calculator::pInCircle(Point p, Circle c) {
     return (doubleCmp(t, 0) < 0);
 }
 
-//�˴�������
 int Calculator::haveIntersection(Line l1, Line l2, set<Point>& nodeSet) {
     double A1 = l1.getA();
     double B1 = l1.getB();
@@ -71,13 +70,15 @@ int Calculator::haveIntersection(Line l1, Line l2, set<Point>& nodeSet) {
     double B2 = l2.getB();
     double C2 = l2.getC();
     double den = A1 * B2 - A2 * B1;
-    if (isParallerl(l1, l2) == true)
+    if (isParallerl(l1, l2) == true) {
         return 0;
+    }
     double num1 = B1 * C2 - B2 * C1;
     double num2 = A2 * C1 - A1 * C2;
     Point  node(num1 / den, num2 / den);
     if (pOnLine(node, l1) && pOnLine(node, l2)) {
         nodeSet.insert(node);
+        //cout << "one node line and line!" << endl;
         return 1;
     }
     return 0;
@@ -207,24 +208,18 @@ int Calculator::haveIntersection(Circle c1, Circle c2, set<Point>& nodeSet) {
 
 
 int Calculator::countAllinsect(vector<Line> lVec, vector<Circle> cVec, set<Point> &nodeSet) {
-	//size_t i, j;
-	//��������ֱ�߼�Ľ���
 	for (auto iterI = lVec.begin(); iterI != lVec.end(); iterI++) {
 		for (auto iterJ = iterI + 1; iterJ < lVec.end(); iterJ++) {
 			haveIntersection((Line) *iterI, (Line) *iterJ, nodeSet);
 		}
 	}
-	//����ֱ����Բ֮��Ľ���
-	//for (i = 0; i < cVec.size(); i++) {
-	//	for (j = 0; j < lVec.size(); j++) {
+
 	for (auto iterI = cVec.begin(); iterI != cVec.end(); iterI++) {
         for (auto iterJ = lVec.begin(); iterJ != lVec.end(); iterJ++) {
     		haveIntersection((Circle) *iterI, (Line) *iterJ, nodeSet);
 		}
 	}
-	//������Բ֮��Ľ���
-	//for (i = 0; i < cVec.size(); i++) {
-	//	for (j = i + 1; j < cVec.size(); j++) {
+
 	for (auto iterI = cVec.begin(); iterI != cVec.end(); iterI++) {
         for (auto iterJ = iterI + 1; iterJ != cVec.end(); iterJ ++) {
     		haveIntersection((Circle)* iterI,(Circle) *iterJ, nodeSet);

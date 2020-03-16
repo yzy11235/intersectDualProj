@@ -18,8 +18,7 @@ public:
 	double getX();
 	double getY();
 	void setXY(double x, double y);
-	//double cross(Point p1, Point p2, Point p3 ); //向量v1 与 向量v2的叉乘的数值
-
+	
 private:
 	double x;
 	double y;

@@ -2,7 +2,7 @@
 
 
 Line::Line() :A(0), B(0), C(0) {};
-Line::Line(lineType newType, double x1, double y1, double x2, double y2) {
+Line::Line(char newType, double x1, double y1, double x2, double y2) {
 	type = newType;
 	A = y1 - y2;
 	B = x2 - x1;
@@ -11,7 +11,7 @@ Line::Line(lineType newType, double x1, double y1, double x2, double y2) {
 	p2.setXY(x2, y2);
 }
 
-lineType Line::getType() {
+char Line::getType() {
 	return type;
 }
 

@@ -1,6 +1,8 @@
 #ifndef CIRCLE_H_
 #define CIRCLE_H_
 
+#include "stdafx.h"
+
 class Circle
 {
 public:

@@ -1,6 +1,7 @@
 #ifndef DEF_H_
 #define DEF_H_
 
+#include "stdafx.h"
 #include <iostream>
 #include <cmath>
 

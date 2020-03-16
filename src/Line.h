@@ -1,12 +1,12 @@
 #ifndef LINE_H_
 #define LINE_H_
 
+#include "stdafx.h"
 #include "Point.h"
 
 // 'L' -> line;
 // 'R' -> radio;
 // 'S' -> segment;
-
 
 class Line
 {
