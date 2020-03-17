@@ -5,8 +5,6 @@ BUAA Software Engineering
 
 ### step 2 命令行&GUI的IO设计
 - 新增IO class
-1. GUI调用，传入直线集，返回全部交点坐标
-2. cmd调用，传入直线集，返回交点数目
 
 ### step 3 异常处理
 - 新增自定义异常处理
@@ -169,5 +167,6 @@ L -99 -100 -50 -49
   - 完成第一部分的测试编写，开始debug
   - 完成2、3部分的设计与第四部分的工具选择
 
-- 0317 12:00 code & tests for step 1 finished
-
+- 0317 
+  - 12:00 code & tests for step 1 finished
+  - 20:00 untested code for step 2

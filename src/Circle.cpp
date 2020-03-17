@@ -2,6 +2,7 @@
 
 Circle::Circle() :X(0), Y(0), R(0) {};
 Circle::Circle(double x, double y, double r) {
+	// exp 
 	X = x;
 	Y = y;
 	R = r;
