@@ -71,16 +71,19 @@ int main(int argc, char *argv[]) {
     infile >> n;
     for (i = 0; i < n; i++) {
         infile >> type;
-        if (type == 'L') {
-            infile >> x1 >> y1 >> x2 >> y2;
-			Line line(type, x1, y1, x2, y2);
-            lVec.push_back(line);
-        }
-        else if (type == 'C') {
+        if (type == 'C') {
             infile >> x1 >> y1 >> r;
             Circle circle(x1, y1, r);
             cVec.push_back(circle);
-        }
+		}
+		else if (type == 'L' || type == 'R' || type == 'S') {
+			infile >> x1 >> y1 >> x2 >> y2;
+			Line line(type, x1, y1, x2, y2);
+			lVec.push_back(line);
+		}
+		else {
+			// exception
+		}
     }
 
 	Calculator* cal = new Calculator();

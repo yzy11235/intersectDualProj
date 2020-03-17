@@ -1,6 +1,6 @@
-#include "CppUnitTest.h"
-#include "..\src\Calculator.h"
 #include "pch.h"
+#include "CppUnitTest.h"
+#include "..\Intersect\Calculator.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -43,7 +43,7 @@ namespace intersectTest
 			Assert::IsFalse(p3 < p4);
 			Assert::IsTrue(p7 < p8);
 			Assert::IsFalse(p8 < p7);
-			
+
 			// test -  ;
 			Point p1Sub2(2.99999999999999 - 3, 0.00000000000002);
 			Assert::IsTrue(p1Sub2 == p1 - p2);
@@ -97,116 +97,135 @@ public:
 	};
 
 	TEST_CLASS(CircleTest) {
-    public:
-	    TEST_METHOD(circleTestBasic) {
-		   Circle c1(1, -2, 5);
-		   // test xyr
-		   Assert::IsTrue(c1.getR() == 5);
-		   Assert::IsTrue(c1.getX() == 1);
-		   Assert::IsTrue(c1.getY() == -2);
-	    }
+public:
+	TEST_METHOD(circleTestBasic) {
+		Circle c1(1, -2, 5);
+		// test xyr
+		Assert::IsTrue(c1.getR() == 5);
+		Assert::IsTrue(c1.getX() == 1);
+		Assert::IsTrue(c1.getY() == -2);
+	}
 	};
 
 	TEST_CLASS(CalBasicTest) {
-	public:
-		TEST_METHOD(xmulPoint) {
-			Point v1(1, 1);
-			Point v2(-3, -5);
-			Point v3(-569, -2262);
-			Point v4(-42, 1074);
-			Point v5(196, 5619);
+public:
+	TEST_METHOD(xmulPoint) {
+		Point v1(1, 1);
+		Point v2(-3, -5);
+		Point v3(-569, -2262);
+		Point v4(-42, 1074);
+		Point v5(196, 5619);
 
-			// xmul 2points test
-			Calculator* calc = new Calculator();
-			Assert::IsTrue(calc->xmult(v1, v2) == -2);
-			Assert::IsTrue(calc->xmult(v2, v4) == -3432);
-			Assert::IsTrue(calc->xmult(v3, v4) == -706110);
-			
-			// xmul 3 points test
-			Point o(1, 2);
-			Point a(3, 5);
-			Point b(4, -1);
-			Assert::IsTrue(calc->xmult(o, a, b) == -15);
-			Assert::IsTrue(calc->xmult(v1, v2, v3) == -5632);
-			Assert::IsTrue(calc->xmult(v2, v3, v4) == -698737);
-			Assert::IsTrue(calc->xmult(v3, v4, v5) == -2552040);
-		}
+		// xmul 2points test
+		Calculator* calc = new Calculator();
+		Assert::IsTrue(calc->xmult(v1, v2) == -2);
+		Assert::IsTrue(calc->xmult(v2, v4) == -3432);
+		Assert::IsTrue(calc->xmult(v3, v4) == -706110);
 
-		TEST_METHOD(onLineTest) {
-			Calculator* calc = new Calculator();
-			char line = 'L';
-			char radio = 'R';
-			char segment = 'S';
-			Line l(line, 7, 10, 9, 100);
-			Line rUp(radio, 7, 10, 9, 100);
-			Line rDown(radio, 9, 100, 7, 10);
-			Line s(segment, 7, 10, 9, 100);
-			Point pDown(6, -35);
-			Point p1(7, 10);
-			Point pMid(8, 55);
-			Point pMidOut1(8, 55.00000000001);
-			Point pMidOut2(7.99999999999999, 55);
-			Point p2(9, 10);
-			Point pUp(9, 100);
-			Point pUpOut(9,10000);
-			Assert::IsTrue(calc->pOnLine(pDown, l));
-			Assert::IsTrue(calc->pOnLine(pDown, rUp) == false);
-			Assert::IsTrue(calc->pOnLine(pDown, rDown));
-			Assert::IsTrue(calc->pOnLine(pDown, s) == false);
+		// xmul 3 points test
+		Point o(1, 2);
+		Point a(3, 5);
+		Point b(4, -1);
+		Assert::IsTrue(calc->xmult(o, a, b) == -15);
+		Assert::IsTrue(calc->xmult(v1, v2, v3) == 5632);
+		Assert::IsTrue(calc->xmult(v2, v3, v4) == -698737);
+		Assert::AreEqual(calc->xmult(v3, v4, v5), (double) 1601247);
+	}
 
-			Assert::IsTrue(calc->pOnLine(p1, l));
-			Assert::IsTrue(calc->pOnLine(p1, rUp));
-			Assert::IsTrue(calc->pOnLine(p1, rDown));
-			Assert::IsTrue(calc->pOnLine(p1, s));
+	TEST_METHOD(onLineTest) {
+		Calculator* calc = new Calculator();
+		char line = 'L';
+		char radio = 'R';
+		char segment = 'S';
+		Line l(line, 7, 10, 9, 100);
+		Line rUp(radio, 7, 10, 9, 100);
+		Line rDown(radio, 9, 100, 7, 10);
+		Line s(segment, 7, 10, 9, 100);
+		Point pDown(6, -35);
+		Point p1(7, 10);
+		Point pMid(8, 55);
+		//Point pMidOut1(8, 55.00000000001);
+		// 精度，小数点后十位
+		Point pMidOut1(8, 55.0000000001);
+		Point pMidOut2(7.9999999999, 55);
+		Point p2(9, 100);
+		Point pUp(10, 145);
+		Point pUpOut(9, 10000);
+		Assert::IsTrue(calc->pOnLine(pDown, l));
+		Assert::IsTrue(calc->pOnLine(pDown, rUp) == false);
+		Assert::IsTrue(calc->pOnLine(pDown, rDown));
+		Assert::IsTrue(calc->pOnLine(pDown, s) == false);
 
-			Assert::IsTrue(calc->pOnLine(pMid, l));
-			Assert::IsTrue(calc->pOnLine(pMid, rUp));
-			Assert::IsTrue(calc->pOnLine(pMid, rDown));
-			Assert::IsTrue(calc->pOnLine(pMid, s));
+		Assert::IsTrue(calc->pOnLine(p1, l));
+		Assert::IsTrue(calc->pOnLine(p1, rUp));
+		Assert::IsTrue(calc->pOnLine(p1, rDown));
+		Assert::IsTrue(calc->pOnLine(p1, s));
 
-			Assert::IsTrue(calc->pOnLine(pMidOut1, l) == false);
-			Assert::IsTrue(calc->pOnLine(pMidOut1, rUp) == false);
-			Assert::IsTrue(calc->pOnLine(pMidOut1, rDown) == false);
-			Assert::IsTrue(calc->pOnLine(pMidOut1, s) == false);
+		Assert::IsTrue(calc->pOnLine(pMid, l));
+		Assert::IsTrue(calc->pOnLine(pMid, rUp));
+		Assert::IsTrue(calc->pOnLine(pMid, rDown));
+		Assert::IsTrue(calc->pOnLine(pMid, s));
 
-			Assert::IsTrue(calc->pOnLine(pMidOut2, l) == false);
-			Assert::IsTrue(calc->pOnLine(pMidOut2, rUp) == false);
-			Assert::IsTrue(calc->pOnLine(pMidOut2, rDown) == false);
-			Assert::IsTrue(calc->pOnLine(pMidOut2, s) == false);
+		Assert::IsTrue(calc->pOnLine(pMidOut1, l) == false);
+		Assert::IsTrue(calc->pOnLine(pMidOut1, rUp) == false);
+		Assert::IsTrue(calc->pOnLine(pMidOut1, rDown) == false);
+		Assert::IsTrue(calc->pOnLine(pMidOut1, s) == false);
 
-			Assert::IsTrue(calc->pOnLine(p2, l));
-			Assert::IsTrue(calc->pOnLine(p2, rUp));
-			Assert::IsTrue(calc->pOnLine(p2, rDown));
-			Assert::IsTrue(calc->pOnLine(p2, s));
+		Assert::IsTrue(calc->pOnLine(pMidOut2, l) == false);
+		Assert::IsTrue(calc->pOnLine(pMidOut2, rUp) == false);
+		Assert::IsTrue(calc->pOnLine(pMidOut2, rDown) == false);
+		Assert::IsTrue(calc->pOnLine(pMidOut2, s) == false);
 
-			Assert::IsTrue(calc->pOnLine(pUp, l));
-			Assert::IsTrue(calc->pOnLine(pUp, rUp));
-			Assert::IsTrue(calc->pOnLine(pUp, rDown) == false);
-			Assert::IsTrue(calc->pOnLine(pUp, s) == false);
+		Assert::IsTrue(calc->pOnLine(p2, l));
+		Assert::IsTrue(calc->pOnLine(p2, rUp));
+		Assert::IsTrue(calc->pOnLine(p2, rDown));
+		Assert::IsTrue(calc->pOnLine(p2, s));
 
-			Assert::IsTrue(calc->pOnLine(pUpOut, l) == false);
-			Assert::IsTrue(calc->pOnLine(pUpOut, rUp) == false);
-			Assert::IsTrue(calc->pOnLine(pUpOut, rDown) == false);
-			Assert::IsTrue(calc->pOnLine(pUpOut, s) == false);
-		}
+		Assert::IsTrue(calc->pOnLine(pUp, l));
+		Assert::IsTrue(calc->pOnLine(pUp, rUp));
+		Assert::IsTrue(calc->pOnLine(pUp, rDown) == false);
+		Assert::IsTrue(calc->pOnLine(pUp, s) == false);
 
-		TEST_METHOD(inCircleTest) {
-			Circle cBase(0, 0, 5);
-			Point pIn1(0, 0);
-			Point pIn2(2.999999, 4);
-			Point pEdge(3, 4);
-			Point pOut1(3.00000001, 4);
-			Point pOut2(-3, -4.0000000000001);
-			Calculator* cal = new Calculator();
-			Assert::IsTrue(cal->pInCircle(pIn1, cBase));
-			Assert::IsTrue(cal->pInCircle(pIn2, cBase));
-			Assert::IsTrue(cal->pInCircle(pEdge, cBase) == false);
-			Assert::IsTrue(cal->pInCircle(pOut1, cBase) == false);
-			Assert::IsTrue(cal->pInCircle(pOut2, cBase) == false);
-		}
+		Assert::IsTrue(calc->pOnLine(pUpOut, l) == false);
+		Assert::IsTrue(calc->pOnLine(pUpOut, rUp) == false);
+		Assert::IsTrue(calc->pOnLine(pUpOut, rDown) == false);
+		Assert::IsTrue(calc->pOnLine(pUpOut, s) == false);
+
+		// TD & RL
+		Line sTD(segment, 0, 1, 0, 100);
+		Line rTD(radio, 0, -1, 0, 8);
+		Line sRL(segment, 0, 1, 5, 1);
+		Line rRL(radio, 0, 1, 3, 1);
+		Point tdOut(0, -2);
+		Point tdIn(0, 99);
+		Point rlOut(-1, 1);
+		Point rlIn(5, 1);
+		Assert::IsTrue(calc->pOnLine(tdIn, sTD));
+		Assert::IsFalse(calc->pOnLine(tdOut, sTD));
+		Assert::IsTrue(calc->pOnLine(tdIn, rTD));
+		Assert::IsFalse(calc->pOnLine(tdOut, rTD));
+		Assert::IsFalse(calc->pOnLine(rlOut, sRL));
+		Assert::IsTrue(calc->pOnLine(rlIn, sRL));
+		Assert::IsFalse(calc->pOnLine(rlOut, rRL));
+		Assert::IsTrue(calc->pOnLine(rlIn, rRL));
+	}
+
+	TEST_METHOD(inCircleTest) {
+		Circle cBase(0, 0, 5);
+		Point pIn1(0, 0);
+		Point pIn2(2.999999, 4);
+		Point pEdge(3, 4);
+		Point pOut1(3.00000001, 4);
+		Point pOut2(-3, -4.0000000000001);
+		Calculator* cal = new Calculator();
+		Assert::IsTrue(cal->pInCircle(pIn1, cBase));
+		Assert::IsTrue(cal->pInCircle(pIn2, cBase));
+		Assert::IsTrue(cal->pInCircle(pEdge, cBase) == false);
+		Assert::IsTrue(cal->pInCircle(pOut1, cBase) == false);
+		Assert::IsTrue(cal->pInCircle(pOut2, cBase) == false);
+	}
 
 	};
-
 
 	TEST_CLASS(CalLAndLTest)
 	{
@@ -232,12 +251,12 @@ public:
 			Assert::IsTrue(cal->isParallerl(l1, r1));
 			Assert::IsTrue(cal->isParallerl(l1, s1));
 			Assert::IsTrue(cal->isParallerl(r1, s1));
-			Assert::IsFalse(cal->isParallerl(l1, sTD) == false);
-			Assert::IsFalse(cal->isParallerl(r1, sTD) == false);
-			Assert::IsFalse(cal->isParallerl(s1, rTD) == false);
+			Assert::IsFalse(cal->isParallerl(l1, sTD));
+			Assert::IsFalse(cal->isParallerl(r1, sTD));
+			Assert::IsFalse(cal->isParallerl(s1, rTD));
 		}
-		
-		// TODO: functin unfinished 
+
+		// TODO: function unfinished 
 		TEST_METHOD(lineOverlap) {
 			Line L1('L', 3, 5, 3, 9);
 			Line L2('L', 3, 6, 3, 9);
@@ -275,7 +294,7 @@ public:
 			calc->haveIntersection(line13, line23, nodeSet3);
 			Assert::AreEqual(nodeSet3.size(), (size_t)0);
 
-            //线段相离
+			//线段相离
 			Line  s1('S', 0, 0, 4, 4);
 			Line  s2('S', 0, 3, 2, 3);
 			set<Point> nodeSet4;
@@ -292,7 +311,7 @@ public:
 			//线段相交于端点
 			Line s3('S', 0, 0, -1, 1);
 			set<Point>nodeSet6;
-			calc->haveIntersection(s1, s3, nodeSet4);
+			calc->haveIntersection(s1, s3, nodeSet6);
 			Assert::AreEqual(nodeSet6.size(), (size_t)1);
 
 			Line s4('S', 3, 3, 0, 1);
@@ -390,7 +409,7 @@ public:
 					calc->haveIntersection(lvec[i], lvec[j], nodeSet);
 				}
 			}
-			Assert::AreEqual(nodeSet.size(), (size_t)12);
+			Assert::AreEqual(nodeSet.size(), (size_t)14);
 
 		}
 	};
@@ -495,16 +514,16 @@ public:
 			Line line2('R', 0, 1, 2, 1);
 			Line line3('R', -1, -1, 1, -1);
 			Circle c(0, 0, 1);
-			vector<Line> lvec;
-			vector<Circle> cvec;
-			lvec.push_back(line1);
-			lvec.push_back(line2);
-			cvec.push_back(c);
+			vector<Line> lVec;
+			vector<Circle> cVec;
+			lVec.push_back(line1);
+			lVec.push_back(line2);
+			lVec.push_back(line3);
+			cVec.push_back(c);
 			set<Point> nodeSet;
-			size_t i, j;
-			for (i = 0; i < cvec.size(); i++) {
-				for (j = 0; j < lvec.size(); j++) {
-					calc->haveIntersection(cvec[i], lvec[j], nodeSet);
+			for (auto iterI = cVec.begin(); iterI != cVec.end(); iterI++) {
+				for (auto iterJ = lVec.begin(); iterJ != lVec.end(); iterJ++) {
+					calc->haveIntersection((Circle)* iterI, (Line)* iterJ, nodeSet);
 				}
 			}
 			Assert::AreEqual(nodeSet.size(), (size_t)3);
@@ -520,7 +539,7 @@ public:
 		TEST_METHOD(RCseparat)
 		{
 			Calculator* calc = new Calculator();
-			Line line1('R', 1,1, 3, 3);
+			Line line1('R', 1, 1, 3, 3);
 			Line line2('R', 0, -11, 20, -3);
 			Circle c(0, 0, 1);
 			vector<Line> lvec;
@@ -545,7 +564,7 @@ public:
 
 			Line line1('R', 0, 0, 0, 2);
 			Line line2('R', -1, 0, -1, 100);
-			Line line3('R', 100, -1, 1000, -1);
+			Line line3('R', 100, -1, -1000, -1);
 			Circle c(0, 0, 2);
 			vector<Line> lvec;
 			vector<Circle> cvec;
@@ -625,7 +644,7 @@ public:
 			Calculator* calc = new Calculator();
 			Line line1('S', 2, 0, 0, 2);
 			Line line2('S', -1, 0, -1, 100);
-			Line line3('S', -3, -1,1, -1);
+			Line line3('S', -3, -1, 1, -1);
 			Circle c(0, 0, 2);
 			vector<Line> lvec;
 			vector<Circle> cvec;
@@ -769,6 +788,7 @@ public:
 		{
 			ifstream infile;
 			ofstream outfile;
+			/*
 			infile.open("input_test.txt");
 			outfile.open("output_test.txt");
 			if (!infile.is_open()) {
@@ -806,6 +826,7 @@ public:
 			cal->countAllinsect(lVec, cVec, nodeSet);
 			outfile << nodeSet.size();
 			Assert::AreEqual(nodeSet.size(), (size_t)784375);
+			*/
 			infile.close();
 			outfile.close();
 		}

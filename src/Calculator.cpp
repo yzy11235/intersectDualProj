@@ -38,13 +38,15 @@ bool Calculator::pOnLine(Point p, Line l) {
 			return true;            
 		}
 		else if (type == 'S') {
-			if (doubleCmp(v1.getX() * v2.getX(), 0) <= 0) {
+			if (doubleCmp(v1.getX() * v2.getX(), 0) <= 0 
+				&& doubleCmp(v1.getY() * v2.getY(), 0) <= 0) {
 				return true;
 			}
 		}
 		else if (type == 'R') {
 			Point r = p1 - p2;
-			if (doubleCmp(r.getX() * v1.getX(), 0) >= 0) {
+			if (doubleCmp(r.getX() * v1.getX(), 0) >= 0
+				&& doubleCmp(r.getY() * v1.getY(), 0) >= 0) {
 				return true;
 			}
 		}
@@ -208,9 +210,13 @@ int Calculator::haveIntersection(Circle c1, Circle c2, set<Point>& nodeSet) {
 
 
 int Calculator::countAllinsect(vector<Line> lVec, vector<Circle> cVec, set<Point> &nodeSet) {
+	Line l1, l2;
+	Circle c1, c2;
 	for (auto iterI = lVec.begin(); iterI != lVec.end(); iterI++) {
+		l1 = (Line)* iterI;
 		for (auto iterJ = iterI + 1; iterJ < lVec.end(); iterJ++) {
-			haveIntersection((Line) *iterI, (Line) *iterJ, nodeSet);
+			l2 = (Line)* iterJ;
+			haveIntersection(l1, l2, nodeSet);
 		}
 	}
 

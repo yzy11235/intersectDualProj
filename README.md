@@ -168,3 +168,6 @@ L -99 -100 -50 -49
 - 0316.22:00: test & design update
   - 完成第一部分的测试编写，开始debug
   - 完成2、3部分的设计与第四部分的工具选择
+
+- 0317 12:00 code & tests for step 1 finished
+
