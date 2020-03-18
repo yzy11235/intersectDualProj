@@ -5,6 +5,13 @@ BUAA Software Engineering
 
 ### step 2 命令行&GUI的IO设计
 - 新增IO class
+```c++
+int guiProcess(std::vector<std::pair<double, double>>* points, std::string msg);
+void cmdProcess(int argc, char* argv[]);
+```
+- guiProcess之后作为ddl供图像界面调用的接口
+- cmdProcess在main中供cmd调用
+
 
 ### step 3 异常处理
 - 新增自定义异常处理
@@ -170,3 +177,6 @@ L -99 -100 -50 -49
 - 0317 
   - 12:00 code & tests for step 1 finished
   - 20:00 untested code for step 2
+
+- 0318
+  - 20：00 step 2 code&test pushed

@@ -2,7 +2,7 @@
 
 int guiProcess(std::vector<std::pair<double, double>>* points, 
 	std::string msg) {
-
+	return 0;
 }
 
 void cmdProcess(int argc, char* argv[]) {
@@ -23,56 +23,40 @@ void cmdProcess(int argc, char* argv[]) {
 		}
 	}
 
-	IOManager io = IOManager::getInstance();
-	io.fileInProcess(infile);
-	set<Point> intersections = getAllIntersect();
+	vector<Line> lVec;
+	vector<Circle> cVec;
+	int n;
+	infile >> n;
+	char type;
+	int x1, y1, x2, y2, r;
+	for (int i = 0; i < n; i++) {
+		infile >> type;
+		if (type == 'C') {
+			infile >> x1 >> y1 >> r;
+			Circle c(x1, y1, r);
+			cVec.push_back(c);
+		}
+		else if (type == 'L' || type == 'R' || type == 'S') {
+			infile >> x1 >> y1 >> x2 >> y2;
+			Line l(type, x1, y1, x2, y2);
+			lVec.push_back(l);
+		}
+		else {
+			//exp
+		}
+	}
+
+	set<Point> intersections = getAllIntersect(lVec, cVec);
 	outfile << intersections.size();
 	infile.close();
 	outfile.close();
 }
 
 
-IOManager::IOManager() {}
-IOManager* IOManager::getInstance() {
-	if (IOinstance == NULL) {
-		IOinstance = new IOinstance();
-	}
-	return IOinstance;
-}
-
-set<Point> IOManager::getAllIntersect() {
+set<Point> getAllIntersect(vector<Line> lVec, vector<Circle> cVec) {
 	Calculator* cal = new Calculator();
 	set<Point> intersections;
 	cal->countAllinsect(lVec, cVec, intersections);
 	return intersections;
 }
 
-void IOManager::fileInProcess(ifstream input) {
-	int n;
-	input >> n;
-	if (n < 1) {
-		// exp
-	}
-	char type;
-	double x1, y1, x2, y2, r;
-	for (int i = 0; i < n; i++) {
-		input >> type;
-		if (type == 'C') {
-			input >> x1 >> y1 >> r;
-			Circle circle(x1, y1, r);
-			cVec.push_back(circle);
-		}
-		else if (type == 'L' || type == 'R' || type == 'S') {
-			input >> x1 >> y1 >> x2 >> y2;
-			Line line(type, x1, y1, x2, y2);
-			lVec.push_back(line);
-		}
-		else {
-			// exception
-		}
-	}
-	input >> type;
-	if (type != NULL) {
-		// exp
-	}
-}

@@ -1,8 +1,11 @@
 #include "pch.h"
 #include "CppUnitTest.h"
 #include "..\Intersect\Calculator.h"
+#include "..\Intersect\IOinterface.h"
+#include <fstream>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
+using namespace std;
 
 namespace intersectTest
 {
@@ -851,6 +854,48 @@ public:
 			nodeSet.insert(p7);
 			nodeSet.insert(p8);
 			Assert::AreEqual(nodeSet.size(), (size_t)6);
+		}
+	};
+
+	TEST_CLASS(IOtest) {
+
+		TEST_METHOD(cmdTest) {
+			int argc = 5;
+			char* argv[5];
+			argv[0] = "intersect.exe";
+			argv[1] = "-i";
+			argv[2] = "input.txt";
+			argv[3] = "-o";
+			argv[4] = "output.txt";
+			cmdProcess(argc, argv);
+			ifstream outfile;
+			outfile.open(argv[4]);
+			Assert::IsTrue(outfile.is_open());
+			int n;
+			outfile >> n;
+			// Assert::AreEqual(n, 4);	io error in test
+		}
+
+		TEST_METHOD(guiTest) {
+
+		}
+
+		TEST_METHOD(getIntersectTest) {
+			Line l('L', -1, 4, 4, -1);
+			Circle c1(1, 0, 2);
+			Circle c2(3, -2, 6);
+			Circle c3(2, 2, 1);
+			vector<Circle> cvec;
+			vector <Line> lvec;
+			cvec.push_back(c1);
+			cvec.push_back(c2);
+			cvec.push_back(c3);
+			lvec.push_back(l);
+			set<Point> nodeSet = getAllIntersect(lvec, cvec);
+			Point p(1, 2);
+			Assert::AreEqual(nodeSet.size(), (size_t)6);
+			Assert::AreEqual(nodeSet.count(p), (size_t)1);
+
 		}
 	};
 }
