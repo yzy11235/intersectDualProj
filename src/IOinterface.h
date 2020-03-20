@@ -6,21 +6,24 @@
 #include <fstream>
 #include <string>
 
+#ifdef IMPORT_DLL
+#else
+#define IMPORT_DLL extern "C" _declspec(dllimport)
+#endif
+
 #define MAX_STR 64
 #define DATA_BOUND 100000
 
 using namespace std;
 
-//int guiProcess(std::vector<std::pair<double, double>>* points, std::string msg);
-
-int guiProcess(std::vector<std::pair<double, double>>* points, 
+IMPORT_DLL int guiProcess(std::vector<std::pair<double, double>>* points,
 	std::vector<string> msg);
-
 
 void cmdProcess(int argc, char* argv[]);
 
 void cmdExcHandler(int argc, char* argv[], ifstream& input, ofstream& output);
 void fileExcHandler(ifstream& input, vector<Line>& lVec, vector<Circle>& cVec);
+void lineExcHandler(char* str, vector<Line>& lVec, vector<Circle>& cVec);
 set<Point> getAllIntersect(vector<Line> lVec, vector<Circle> cVec);
 
 char* readStr(char* str, int* pos); // throw file format exc;

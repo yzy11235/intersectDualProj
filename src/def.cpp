@@ -1,4 +1,5 @@
 #include "def.h"
+#include "pch.h"
 
 int doubleCmp(double a, double b) {
 	if (fabs(a - b) < EPS) {

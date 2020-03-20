@@ -1,5 +1,6 @@
 #include "IOinterface.h"
 #include "Exception.h"
+#include "pch.h"
 #include <stdlib.h>
 #include <ctype.h>
 
@@ -7,7 +8,28 @@ using namespace std;
 
 int guiProcess(std::vector<std::pair<double, double>>* points, 
 	std::vector<string> msg) {
-	return 0;
+	try {
+		vector<Line> lVec;
+		vector<Circle> cVec;
+		for (auto iter = msg.begin(); iter != msg.end(); iter++) {
+			string dataPiece = (string)* iter;
+			lineExcHandler((char*) dataPiece.c_str(), lVec, cVec);
+		}
+		set<Point> pointSet = getAllIntersect(lVec, cVec);
+		for (auto iter = pointSet.begin(); iter != pointSet.end(); iter++) {
+			Point p = (Point)* iter;
+			points->push_back(make_pair(p.getX(), p.getY()));
+		}
+		return (int)pointSet.size();
+	} catch (fileException& fileError) {
+		cout << fileError.what() << endl;
+	}
+	catch (lineException& lineError) {
+		cout << lineError.what() << endl;
+	}
+	catch (CircleException& circleError) {
+		cout << circleError.what() << endl;
+	}
 }
 
 void cmdProcess(int argc, char* argv[]) {
@@ -72,55 +94,11 @@ void fileExcHandler(ifstream& input, vector<Line>& lVec, vector<Circle>& cVec) {
 	if ((n = isInt(readStr(str, pos))) < 1) {
 		throw fileException(FILE_GRAPHSUM_ERROR);
 	}
-	char* type;
-	int x1, y1, x2, y2, r;
+
 	int i = 0;
 	while (!input.eof()) {
 		input.getline(str, MAX_STR);
-		type = readStr(str, pos);
-		str = str + *pos;
-		x1 = isInt(readStr(str, pos));
-		str = str + *pos;
-		y1 = isInt(readStr(str, pos));
-		str = str + *pos;
-		if (strcmp(type, "C") == 0) {
-			if (x1 >= DATA_BOUND || x1 <= -DATA_BOUND
-				|| y1 >= DATA_BOUND || y1 <= -DATA_BOUND) {
-				throw CircleException(CIRCLE_FORMAT_ERROR);
-			}
-			r = isInt(readStr(str, pos));
-			str += *pos;
-			if (r < 1 || r >= DATA_BOUND) {
-				throw CircleException(CIRCLE_FORMAT_ERROR);
-			}
-			endofStr(str);
-			Circle c(x1, y1, r);
-			cVec.push_back(c);
-		}
-		else if (strcmp(type, "L") == 0 || strcmp(type, "R") == 0
-			|| strcmp(type, "S") == 0) {
-			if (x1 >= DATA_BOUND || x1 <= -DATA_BOUND
-				|| y1 >= DATA_BOUND || y1 <= -DATA_BOUND) {
-				throw lineException(LINE_FORMAT_ERROR);
-			}
-			x2 = isInt(readStr(str, pos));
-			str += *pos;
-			y2 = isInt(readStr(str, pos));
-			str += *pos;
-			if (x2 >= DATA_BOUND || x2 <= -DATA_BOUND
-				|| y2 >= DATA_BOUND || y2 <= -DATA_BOUND) {
-				throw lineException(LINE_FORMAT_ERROR);
-			}
-			else if (x1 == x2 && y1 == y2) {
-				throw lineException(LINE_FORMAT_ERROR);
-			}
-			endofStr(str);
-			Line l(*type, x1, y1, x2, y2);
-			lVec.push_back(l);
-		}
-		else {
-			throw fileException(FILE_FORMAT_ERROR);
-		}
+		lineExcHandler(str, lVec, cVec);
 		i++;
 		if (i > n) {
 			throw fileException(FILE_GRAPHSUM_ERROR);
@@ -129,6 +107,57 @@ void fileExcHandler(ifstream& input, vector<Line>& lVec, vector<Circle>& cVec) {
 	if (i != n) {
 		throw fileException(FILE_GRAPHSUM_ERROR);
 	}
+}
+
+void lineExcHandler(char* str, vector<Line>& lVec, vector<Circle>& cVec) {
+	char* type;
+	int x1, y1, x2, y2, r;
+	int* pos = (int*)malloc(sizeof(int));
+	type = readStr(str, pos);
+	str = str + *pos;
+	x1 = isInt(readStr(str, pos));
+	str = str + *pos;
+	y1 = isInt(readStr(str, pos));
+	str = str + *pos;
+	if (strcmp(type, "C") == 0) {
+		if (x1 >= DATA_BOUND || x1 <= -DATA_BOUND
+			|| y1 >= DATA_BOUND || y1 <= -DATA_BOUND) {
+			throw CircleException(CIRCLE_FORMAT_ERROR);
+		}
+		r = isInt(readStr(str, pos));
+		str += *pos;
+		if (r < 1 || r >= DATA_BOUND) {
+			throw CircleException(CIRCLE_FORMAT_ERROR);
+		}
+		endofStr(str);
+		Circle c(x1, y1, r);
+		cVec.push_back(c);
+	}
+	else if (strcmp(type, "L") == 0 || strcmp(type, "R") == 0
+		|| strcmp(type, "S") == 0) {
+		if (x1 >= DATA_BOUND || x1 <= -DATA_BOUND
+			|| y1 >= DATA_BOUND || y1 <= -DATA_BOUND) {
+			throw lineException(LINE_FORMAT_ERROR);
+		}
+		x2 = isInt(readStr(str, pos));
+		str += *pos;
+		y2 = isInt(readStr(str, pos));
+		str += *pos;
+		if (x2 >= DATA_BOUND || x2 <= -DATA_BOUND
+			|| y2 >= DATA_BOUND || y2 <= -DATA_BOUND) {
+			throw lineException(LINE_FORMAT_ERROR);
+		}
+		else if (x1 == x2 && y1 == y2) {
+			throw lineException(LINE_FORMAT_ERROR);
+		}
+		endofStr(str);
+		Line l(*type, x1, y1, x2, y2);
+		lVec.push_back(l);
+	}
+	else {
+		throw fileException(FILE_FORMAT_ERROR);
+	}
+	free(pos);
 }
 
 char* readStr(char* str, int* pos) {

@@ -153,6 +153,8 @@ C -100000 4897 278
 
 
 ### Step 4
+- VS dll导出
+- dll异常处理和gui互联
 
 
 ## Push Record 
@@ -187,3 +189,4 @@ C -100000 4897 278
 
 - 0320
   - 10：50 step 3 code & tests pushed
+  - 19：30 dll pushed

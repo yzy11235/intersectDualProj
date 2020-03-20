@@ -1,5 +1,6 @@
 #include "Calculator.h"
 #include "Exception.h"
+#include "pch.h"
 #include <iterator>
 
 using namespace std;

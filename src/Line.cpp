@@ -1,5 +1,5 @@
 #include "Line.h"
-
+#include "pch.h"
 
 Line::Line() :A(0), B(0), C(0) {};
 Line::Line(char newType, double x1, double y1, double x2, double y2) {
