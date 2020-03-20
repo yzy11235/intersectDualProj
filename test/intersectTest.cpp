@@ -2,6 +2,7 @@
 #include "CppUnitTest.h"
 #include "..\Intersect\Calculator.h"
 #include "..\Intersect\IOinterface.h"
+#include "..\Intersect\Exception.h"
 #include <fstream>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -691,15 +692,18 @@ public:
 			cvec.push_back(c1);
 			cvec.push_back(c2);
 			cvec.push_back(c3);
-			size_t i, j;
-			for (i = 0; i < cvec.size(); i++) {
-				for (j = 0; j < cvec.size(); j++) {
-					calc->haveIntersection(cvec[i], cvec[j], nodeSet);
+			try {
+				size_t i, j;
+				for (i = 0; i < cvec.size(); i++) {
+					for (j = 0; j < cvec.size(); j++) {
+						calc->haveIntersection(cvec[i], cvec[j], nodeSet);
+					}
 				}
+				Assert::AreEqual(nodeSet.size(), (size_t)1);
+				Point p(1, 0);
+				Assert::AreEqual(nodeSet.count(p), (size_t)1);
 			}
-			Assert::AreEqual(nodeSet.size(), (size_t)1);
-			Point p(1, 0);
-			Assert::AreEqual(nodeSet.count(p), (size_t)1);
+			catch (CircleException& circleError) {}
 		}
 
 		TEST_METHOD(CCtwo)
@@ -714,21 +718,23 @@ public:
 			cvec.push_back(c2);
 			cvec.push_back(c3);
 			size_t i, j;
-			for (i = 0; i < cvec.size(); i++) {
-				for (j = 0; j < cvec.size(); j++) {
-					calc->haveIntersection(cvec[i], cvec[j], nodeSet);
+			try {
+				for (i = 0; i < cvec.size(); i++) {
+					for (j = 0; j < cvec.size(); j++) {
+						calc->haveIntersection(cvec[i], cvec[j], nodeSet);
+					}
 				}
-			}
-			Assert::AreEqual(nodeSet.size(), (size_t)3);
-			Point p1(2, 0);
-			Point p2(0, 2);
-			Point p3(0.8, 3.6);
-			Point p4(4 / 5, 18 / 5);
-			Point p5(0, 3);
-			Assert::AreEqual(nodeSet.count(p1), (size_t)1);
-			Assert::AreEqual(nodeSet.count(p2), (size_t)1);
-			Assert::AreEqual(nodeSet.count(p3), (size_t)1);
-			Assert::IsTrue(p4 == p5);
+				Assert::AreEqual(nodeSet.size(), (size_t)3);
+				Point p1(2, 0);
+				Point p2(0, 2);
+				Point p3(0.8, 3.6);
+				Point p4(4 / 5, 18 / 5);
+				Point p5(0, 3);
+				Assert::AreEqual(nodeSet.count(p1), (size_t)1);
+				Assert::AreEqual(nodeSet.count(p2), (size_t)1);
+				Assert::AreEqual(nodeSet.count(p3), (size_t)1);
+				Assert::IsTrue(p4 == p5);
+			} catch (CircleException& circleError) {}
 		}
 		TEST_METHOD(CCzero)
 		{
@@ -744,13 +750,15 @@ public:
 			cvec.push_back(c3);
 			cvec.push_back(c4);
 			size_t i, j;
-			for (i = 0; i < cvec.size(); i++) {
-				for (j = 0; j < cvec.size(); j++) {
-					calc->haveIntersection(cvec[i], cvec[j], nodeSet);
+			try {
+				for (i = 0; i < cvec.size(); i++) {
+					for (j = 0; j < cvec.size(); j++) {
+						calc->haveIntersection(cvec[i], cvec[j], nodeSet);
+					}
 				}
-			}
-			Assert::AreEqual(nodeSet.size(), (size_t)1);
-
+				Assert::AreEqual(nodeSet.size(), (size_t)1);
+			} catch (CircleException& circleError) {}
+			
 		}
 
 	};

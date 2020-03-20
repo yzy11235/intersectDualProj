@@ -1,4 +1,5 @@
 #include "Calculator.h"
+#include "Exception.h"
 #include <iterator>
 
 using namespace std;
@@ -22,6 +23,41 @@ bool Calculator::isParallerl(Line l1, Line l2) {
     Point p21 = l2.getP1();
     Point p22 = l2.getP2();
     if (doubleCmp(xmult(p12 - p11, p22 - p21), 0) == 0) {//平行 (重叠还没写）
+		Line line('L', p11.getX(), p11.getY(), p12.getX(), p12.getY());
+		// 重合
+		if (pOnLine(p21, line)) {
+			if (l1.getType() == 'L' || l2.getType() == 'L') {
+				throw lineException(LINE_INFINITE_INTERSECT);
+			}
+			else if ((l1.getType() == 'R' || l2.getType() == 'R')
+				&& (pOnLine(p11, l2) || pOnLine(p21, l1))) {
+				throw lineException(LINE_INFINITE_INTERSECT);
+			}
+			else if (l1.getType() == 'S' && l2.getType() == 'S') {
+				if (p11 == p21 || p11 == p22 || p12 == p21 || p12 == p22) {
+					// 排除端点重合的情况
+					if ((p11 == p21 || p11 == p22) && (p12 == p21 || p12 == p22)) {
+						throw lineException(LINE_INFINITE_INTERSECT);
+					}
+					else if (p11 == p21 && (pOnLine(p12, l2) || pOnLine(p22, l1))) {
+						throw lineException(LINE_INFINITE_INTERSECT);
+					}
+					else if (p11 == p22 && (pOnLine(p12, l2) || pOnLine(p21, l1))) {
+						throw lineException(LINE_INFINITE_INTERSECT);
+					}
+					else if (p12 == p21 && (pOnLine(p11, l2) || pOnLine(p22, l1))) {
+						throw lineException(LINE_INFINITE_INTERSECT);
+					}
+					else if (p12 == p22 && (pOnLine(p11, l2) || pOnLine(p21, l1))) {
+						throw lineException(LINE_INFINITE_INTERSECT);
+					}
+				}
+			    else if (pOnLine(p11, l2) || pOnLine(p12, l2) 
+					|| pOnLine(p21, l1) || pOnLine(p22, l1)) {
+					throw lineException(LINE_INFINITE_INTERSECT);
+				}
+			}
+		}
         return true;
     }
     return false;
@@ -161,6 +197,9 @@ int Calculator::haveIntersection(Circle c1, Circle c2, set<Point>& nodeSet) {
     double a2 = c2.getX();
     double b2 = c2.getY();
     double r2 = c2.getR();
+	if (doubleCmp(a1, a2) == 0 && doubleCmp(b1, b2) == 0 && doubleCmp(r1, r2) == 0) {
+		throw CircleException(CIRCLE_INFINITE_INTERSECT);
+	}
 
     //���һЩ��ֵ  �򻯼���
     double r11 = r1 * r1;

@@ -14,6 +14,7 @@ public:
 	Point(double a, double b);
 	bool operator < (const Point& p)const;
 	bool operator ==(const Point& p)const;
+	bool operator !=(const Point& p)const;
 	Point operator -(const Point& p)const;
 	double getX();
 	double getY();

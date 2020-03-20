@@ -19,6 +19,9 @@ bool Point::operator ==(const Point& p)const {
     return (doubleCmp(x, p.x) == 0 && doubleCmp(y, p.y) == 0);
 }
 
+bool Point::operator !=(const Point& p)const {
+	return (doubleCmp(x, p.x) != 0 || doubleCmp(y, p.y) != 0);
+}
 Point Point:: operator -(const Point& p)const{
 	 double x0 = x - ((Point) p).getX();
 	 double y0 = y - ((Point) p).getY();
