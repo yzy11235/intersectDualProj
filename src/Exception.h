@@ -25,7 +25,6 @@ public:
 	cmdException(int errorType) {
 		type = errorType;
 	}
-	~cmdException() throw() {}
 
 	const char* getUsage() {
 		return "Usage: intersect.exe -i input.txt -o output.txt";
@@ -41,6 +40,9 @@ public:
 		else if (type == CMD_NOT_FOUND) {
 			return "Command not found";
 		}
+		else {
+			return "cmd unstated error";
+		}
 	}
 
 private:
@@ -52,7 +54,6 @@ public:
 	fileException(int errorType) {
 		type = errorType;
 	}
-	~fileException() throw() {}
 
 	virtual const char* what() const throw() {
 		if (type == FILE_FORMAT_ERROR) {
@@ -71,6 +72,9 @@ public:
 				"'input.txt' not found,\n"
 				"or 'output.txt' open error"; 
 		}
+		else {
+			return "File Unstated error";
+		}
 	}
 
 private:
@@ -83,7 +87,6 @@ public:
 	lineException(int errorType) {
 		type = errorType;
 	}
-	~lineException() throw () {}
 
 	virtual const char* what() const throw() {
 		if (type == LINE_FORMAT_ERROR) {
@@ -97,6 +100,9 @@ public:
 			return "Lines input error\n"
 				"Lines have infinite intersections";
 		}
+		else {
+			return "Line Unstated error";
+		}
 	}
 
 private:
@@ -109,7 +115,6 @@ public:
 	CircleException(int errorType) {
 		type = errorType;
 	}
-	~CircleException() throw () {}
 
 	virtual const char* what() const throw () {
 		if (type == CIRCLE_FORMAT_ERROR) {
@@ -121,6 +126,9 @@ public:
 		else if (type == CIRCLE_INFINITE_INTERSECT) {
 			return "Circles input error\n"
 				"Circles have infinite intersections";
+		}
+		else {
+			return "Circle Unstated error";
 		}
 	}
 

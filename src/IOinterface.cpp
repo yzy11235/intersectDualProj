@@ -1,13 +1,12 @@
 #include "IOinterface.h"
 #include "Exception.h"
-#include "pch.h"
 #include <stdlib.h>
 #include <ctype.h>
 
 using namespace std;
 
 int guiProcess(std::vector<std::pair<double, double>>* points, 
-	std::vector<string> msg) {
+	std::vector<std::string> msg) {
 	try {
 		vector<Line> lVec;
 		vector<Circle> cVec;
@@ -30,6 +29,7 @@ int guiProcess(std::vector<std::pair<double, double>>* points,
 	catch (CircleException& circleError) {
 		cout << circleError.what() << endl;
 	}
+	return -1;
 }
 
 void cmdProcess(int argc, char* argv[]) {
@@ -70,14 +70,8 @@ void cmdExcHandler(int argc, char* argv[], ifstream& input, ofstream& output) {
 	else if (strcmp(argv[1], "-i") != 0) {
 		throw cmdException(CMD_PAR_EXC);
 	}
-	else if (strcmp(argv[2], "input.txt") != 0) {
-		throw cmdException(CMD_FILENAME_EXC);
-	}
 	else if (strcmp(argv[3], "-o") != 0) {
 		throw cmdException(CMD_PAR_EXC);
-	}
-	else if (strcmp(argv[4], "output.txt") != 0) {
-		throw cmdException(CMD_FILENAME_EXC);
 	}
 	input.open(argv[2]);
 	output.open(argv[4]);
@@ -96,9 +90,13 @@ void fileExcHandler(ifstream& input, vector<Line>& lVec, vector<Circle>& cVec) {
 	}
 
 	int i = 0;
-	while (!input.eof()) {
+	for (int i = 0; i < n; i++) {
 		input.getline(str, MAX_STR);
 		lineExcHandler(str, lVec, cVec);
+	}
+	/*
+	while (!input.eof()) {
+		
 		i++;
 		if (i > n) {
 			throw fileException(FILE_GRAPHSUM_ERROR);
@@ -106,62 +104,67 @@ void fileExcHandler(ifstream& input, vector<Line>& lVec, vector<Circle>& cVec) {
 	}
 	if (i != n) {
 		throw fileException(FILE_GRAPHSUM_ERROR);
-	}
+	}*/
 }
 
 void lineExcHandler(char* str, vector<Line>& lVec, vector<Circle>& cVec) {
 	char* type;
 	int x1, y1, x2, y2, r;
-	int* pos = (int*)malloc(sizeof(int));
-	type = readStr(str, pos);
-	str = str + *pos;
-	x1 = isInt(readStr(str, pos));
-	str = str + *pos;
-	y1 = isInt(readStr(str, pos));
-	str = str + *pos;
-	if (strcmp(type, "C") == 0) {
-		if (x1 >= DATA_BOUND || x1 <= -DATA_BOUND
-			|| y1 >= DATA_BOUND || y1 <= -DATA_BOUND) {
-			throw CircleException(CIRCLE_FORMAT_ERROR);
-		}
-		r = isInt(readStr(str, pos));
-		str += *pos;
-		if (r < 1 || r >= DATA_BOUND) {
-			throw CircleException(CIRCLE_FORMAT_ERROR);
-		}
-		endofStr(str);
-		Circle c(x1, y1, r);
-		cVec.push_back(c);
-	}
-	else if (strcmp(type, "L") == 0 || strcmp(type, "R") == 0
-		|| strcmp(type, "S") == 0) {
-		if (x1 >= DATA_BOUND || x1 <= -DATA_BOUND
-			|| y1 >= DATA_BOUND || y1 <= -DATA_BOUND) {
-			throw lineException(LINE_FORMAT_ERROR);
-		}
-		x2 = isInt(readStr(str, pos));
-		str += *pos;
-		y2 = isInt(readStr(str, pos));
-		str += *pos;
-		if (x2 >= DATA_BOUND || x2 <= -DATA_BOUND
-			|| y2 >= DATA_BOUND || y2 <= -DATA_BOUND) {
-			throw lineException(LINE_FORMAT_ERROR);
-		}
-		else if (x1 == x2 && y1 == y2) {
-			throw lineException(LINE_FORMAT_ERROR);
-		}
-		endofStr(str);
-		Line l(*type, x1, y1, x2, y2);
-		lVec.push_back(l);
+	int* pos;
+	pos = (int*)malloc(sizeof(int));
+	if (pos == NULL) {
+		cout << "malloc error" << endl;
 	}
 	else {
-		throw fileException(FILE_FORMAT_ERROR);
+		type = readStr(str, pos);
+		str = str + *pos;
+		x1 = isInt(readStr(str, pos));
+		str = str + *pos;
+		y1 = isInt(readStr(str, pos));
+		str = str + *pos;
+		if (strcmp(type, "C") == 0) {
+			if (x1 >= DATA_BOUND || x1 <= -DATA_BOUND
+				|| y1 >= DATA_BOUND || y1 <= -DATA_BOUND) {
+				throw CircleException(CIRCLE_FORMAT_ERROR);
+			}
+			r = isInt(readStr(str, pos));
+			str += *pos;
+			if (r < 1 || r >= DATA_BOUND) {
+				throw CircleException(CIRCLE_FORMAT_ERROR);
+			}
+			endofStr(str);
+			Circle c(x1, y1, r);
+			cVec.push_back(c);
+		}
+		else if (strcmp(type, "L") == 0 || strcmp(type, "R") == 0
+			|| strcmp(type, "S") == 0) {
+			if (x1 >= DATA_BOUND || x1 <= -DATA_BOUND
+				|| y1 >= DATA_BOUND || y1 <= -DATA_BOUND) {
+				throw lineException(LINE_FORMAT_ERROR);
+			}
+			x2 = isInt(readStr(str, pos));
+			str += *pos;
+			y2 = isInt(readStr(str, pos));
+			str += *pos;
+			if (x2 >= DATA_BOUND || x2 <= -DATA_BOUND
+				|| y2 >= DATA_BOUND || y2 <= -DATA_BOUND) {
+				throw lineException(LINE_FORMAT_ERROR);
+			}
+			else if (x1 == x2 && y1 == y2) {
+				throw lineException(LINE_FORMAT_ERROR);
+			}
+			endofStr(str);
+			Line l(*type, x1, y1, x2, y2);
+			lVec.push_back(l);
+		}
+		else {
+			throw fileException(FILE_FORMAT_ERROR);
+		}
+		free(pos);
 	}
-	free(pos);
 }
 
 char* readStr(char* str, int* pos) {
-	char ch;
 	int i = 0, j = 0;
 	while (*(str + i) < 33) {
 		if (*(str + i) == 0) {
@@ -171,14 +174,19 @@ char* readStr(char* str, int* pos) {
 		i++;
 	}
 	char* retStr = (char*)malloc(16 * sizeof(char));
-	while (*(str + i) > 32) {
-		retStr[j] = *(str + i);
-		i++;
-		j++;
-	} 
-	retStr[j] = 0;
-	*pos = i;
-	return retStr;
+	if (retStr) {
+		while (*(str + i) > 32) {
+			retStr[j] = *(str + i);
+			i++;
+			j++;
+		}
+		retStr[j] = 0;
+		*pos = i;
+		return retStr;
+	}
+	else {
+		return NULL;
+	}
 }
 
 // is int & no format like 001;

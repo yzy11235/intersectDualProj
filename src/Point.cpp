@@ -1,5 +1,4 @@
 #include "Point.h"
-#include "pch.h"
 
 using namespace std;
 
@@ -12,8 +11,9 @@ Point::Point(double a, double b)
 
 bool Point::operator < (const Point& p)const {
     //return x==p.x?y<p.y:x<p.x;
-    return (doubleCmp(x, p.x) == 0 ? 
-		doubleCmp(y, p.y) < 0 : doubleCmp(x, p.x) < 0);
+    int res = doubleCmp(x, p.x);
+    return res == 0 ? 
+		doubleCmp(y, p.y) < 0 : res < 0;
 }
 
 bool Point::operator ==(const Point& p)const {
@@ -24,10 +24,8 @@ bool Point::operator !=(const Point& p)const {
 	return (doubleCmp(x, p.x) != 0 || doubleCmp(y, p.y) != 0);
 }
 Point Point:: operator -(const Point& p)const{
-	 double x0 = x - ((Point) p).getX();
-	 double y0 = y - ((Point) p).getY();
-	 Point newP(x0,y0);
-	 return newP;
+    Point newP(x - p.x, y - p.y);
+    return newP;
 }
 
 double Point:: getX(){

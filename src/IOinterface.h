@@ -17,7 +17,7 @@
 using namespace std;
 
 IMPORT_DLL int guiProcess(std::vector<std::pair<double, double>>* points,
-	std::vector<string> msg);
+	std::vector<std::string> msg);
 
 void cmdProcess(int argc, char* argv[]);
 

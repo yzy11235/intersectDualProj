@@ -17,6 +17,7 @@ public:
 	double getA();
 	double getB();
 	double getC();
+                double getSlope();
 	Point  getP1();
 	Point  getP2();
 
@@ -27,6 +28,7 @@ private:
 	double A;
 	double B;
 	double C;
+                double slope;
 };
 
 

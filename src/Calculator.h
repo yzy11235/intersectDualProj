@@ -21,7 +21,7 @@ public:
 	// 圆内 return true;  相切/相离  return false;
 	bool pInCircle(Point p, Circle c);
 	// TODO: add slope class
-	bool isParallerl(Line l1, Line l2);//判断两线是否平行 (并捕捉 重叠的异常)	 
+	bool isParallel(Line l1, Line l2);//判断两线是否平行 (并捕捉 重叠的异常)	 
 	int haveIntersection(Line l1, Line l2, set<Point>& nodeSet);
 	int haveIntersection(Circle c, Line l, set<Point>& nodeSet);
 	int haveIntersection(Circle c1, Circle c2, set<Point>& nodeSet);
