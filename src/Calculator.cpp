@@ -270,5 +270,5 @@ int Calculator::countAllinsect(vector<Line> lVec, vector<Circle> cVec, set<Point
 			haveIntersection((Circle)* iterI, (Circle)* iterJ, nodeSet);
 		}
 	}
-	return nodeSet.size();
+	return (int)nodeSet.size();
 }

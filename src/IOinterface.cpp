@@ -2,18 +2,17 @@
 #include "Exception.h"
 #include <stdlib.h>
 #include <ctype.h>
+#include <sstream>
 
 using namespace std;
 
 int guiProcess(std::vector<std::pair<double, double>>* points, 
-	std::vector<std::string> msg) {
+	std::string msg) {
 	try {
 		vector<Line> lVec;
 		vector<Circle> cVec;
-		for (auto iter = msg.begin(); iter != msg.end(); iter++) {
-			string dataPiece = (string)* iter;
-			lineExcHandler((char*) dataPiece.c_str(), lVec, cVec);
-		}
+		istringstream input(msg);
+		fileExcHandler(input, lVec, cVec);
 		set<Point> pointSet = getAllIntersect(lVec, cVec);
 		for (auto iter = pointSet.begin(); iter != pointSet.end(); iter++) {
 			Point p = (Point)* iter;
@@ -80,7 +79,7 @@ void cmdExcHandler(int argc, char* argv[], ifstream& input, ofstream& output) {
 	}
 }
 
-void fileExcHandler(ifstream& input, vector<Line>& lVec, vector<Circle>& cVec) {
+void fileExcHandler(istream& input, vector<Line>& lVec, vector<Circle>& cVec) {
 	char* str = (char*)malloc(MAX_STR * sizeof(char));
 	input.getline(str, MAX_STR);
 	int n;
@@ -197,7 +196,7 @@ int isInt(char* str) {
 		str += 1;
 	}
 	int num = 0;
-	int n = strlen(str);
+	int n = (int)strlen(str);
 	if (*str == '0' && n != 1) {
 		// remove numbers like 001;
 		throw fileException(FILE_FORMAT_ERROR);

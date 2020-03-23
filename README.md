@@ -32,7 +32,7 @@ void cmdProcess(int argc, char* argv[]);
 
 
 ### Step 4
-- VS dll导出
+- VS dll新建项目导出
 - dll异常处理和gui互联
 
 
@@ -69,3 +69,6 @@ void cmdProcess(int argc, char* argv[]);
 - 0320
   - 10：50 step 3 code & tests pushed
   - 19：30 dll pushed
+
+- 0323
+  - 16：00 step4 dll & gui test
