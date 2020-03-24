@@ -10,8 +10,9 @@
 #include "QTextStream"
 #include "QFile"
 
-//#pragma comment(lib,"calcInterface.lib")
-#pragma comment(lib,"DllexprotProj.lib")
+#pragma comment(lib,"calcInterface.lib")
+//#pragma comment(lib,"DllexprotProj.lib")
+
 _declspec(dllexport)  extern "C"  int guiProcess(std::vector<std::pair<double, double>> * points, std::string msg);
 
 IntersectGUI::IntersectGUI(QWidget *parent)
