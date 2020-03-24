@@ -44,5 +44,6 @@ intersectDualProj/
 
 只需更换可执行文件夹中的 `calcInterface.lib``calcInterface.dll`即可完成对接
 
-由于我们一开始就商量好了接口，所以没有为对接改动太多
+由于我们一开始就商量好了接口，所以没有为对接改动太多，故没有新建分支。
+
 
